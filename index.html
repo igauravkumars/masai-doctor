@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Masai Doctor Records</title>
+  </head>
+  <style>
+    table {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 70%;
+  margin: auto;
+  margin-top: 50px;
+  text-align: center;
+}
+
+table td,
+table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+h1{
+  text-align: center;
+  color: darkblue;
+}
+div{
+  width:90%;
+  display: flex;
+  gap:100px;
+}
+
+th{
+  background-color:lightskyblue;
+}
+form{
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+  width: 30%;
+  margin-left: 15px;
+  padding-left: 15px;
+  height: 500px;
+  padding-top: 25px;
+  
+}
+input{
+  width: 90%;
+  height: 25px;
+}
+label{
+  font-weight: bold;
+}
+#btn{
+  width: 100%;
+  height:50px;
+  background-color: red;
+}
+
+  </style>
+  <body>
+    <!-- Use this form for data input  -->
+    <div>
+    <form onsubmit="formdata(event)">
+      <label>Name</label>
+      <input placeholder="Name" type="text" id="name" /><br><br>
+      <label>Doctor ID</label>
+      <input placeholder="Doctor ID" type="text" id="doctor_id" /><br><br>
+      <label>Specialization</label>
+      <select id="specialization">
+        <option value="">Select Specialization</option>
+        <option value="Dermatologist">Dermatologist</option>
+        <option value="Dentist">Dentist</option>
+        <option value="Gynecologist">Gynecologist</option>
+      </select><br><br>
+      <label>Experience</label>
+      <input placeholder="Experience" type="number" id="experience" /><br><br>
+      <label>Email Address</label>
+      <input placeholder="Email" type="email" id="email" /><br><br>
+      <label>Mobile No.</label>
+      <input placeholder="Mobile No." type="number" id="mobile" /><br><br>
+      <input type="submit" value="Submit" />
+    </form>
+
+    <!-- Use this Select tag for filter part  -->
+    <select id="filter">
+      <option value="">Select Specialization</option>
+      <option value="Dermatologist">Dermatologist</option>
+      <option value="Dentist">Dentist</option>
+      <option value="Gynecologist">Gynecologist</option>
+    </select>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Doctor ID</th>
+          <th>Specialization</th>
+          <th>Experience in Years</th>
+          <th>Email</th>
+          <th>Mobile No</th>
+          <th>Role</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody id="t_body">
+        <!-- Append Rows here using JS & DOM  -->
+      </tbody>
+    </table>
+  </div>
+  </body>
+  
+  <script>
+   
+  function formdata(e){
+      e.preventDefault();
+      let arr = JSON.parse(localStorage.getItem("data"))|| []
+      let Name = document.getElementById("name").value;
+      let Doctor_ID = document.getElementById("doctor_id").value;
+      let Specialization = document.getElementById("specialization").value;
+      let Experience_in_Years =document.getElementById("experience").value;
+      let Email = document.getElementById("email").value;
+      let Mobile_No = document.getElementById("mobile").value;
+      let Role =Doctor_role(Experience_in_Years.value);
+      let select =document.getElementById("filter").value
+      
+      let obj={
+        
+        Name,
+        Doctor_ID,
+        Specialization,
+        Experience_in_Years,
+        Email,
+        Mobile_No,
+        Role,
+        select
+
+        
+      }
+     
+     arr.push(obj)
+     
+     localStorage.setItem("data",JSON.stringify(arr))
+     showdata(arr)
+   }
+   function showdata(arr){
+    let tbody =document.getElementById("t_body")
+    tbody.innerHTML =null
+     arr.map((e)=>{
+    let row = document.createElement("tr");
+    let td1 = document.createElement("td");
+    let td2 = document.createElement("td");
+    let td3 = document.createElement("td");
+    let td4 = document.createElement("td");
+    let td5 = document.createElement("td");
+    let td6 = document.createElement("td");
+    let td7 = document.createElement("td");
+    let Deletebutton = document.createElement("button")
+    Deletebutton.id="btn";
+    
+    
+    
+    td1.innerText=e.Name;
+    td2.innerText=e.Doctor_ID;
+    td3.innerText=e.Specialization
+    td4.innerText=e.Experience_in_Years
+    td5.innerText=e. Email
+    td6.innerText=e.Mobile_No
+    td7.innerText=e.Role
+    Deletebutton.innerText="Delete"
+    Deletebutton.addEventListener("click",function(){
+      arr.filter((el,i)=>{
+        if (i !== -1) {
+            arr.splice(i, 0);
+        }
+        row.remove();
+      })
+    
+    })
+    row.append( td1,td2,td3, td4,td5,td6,td7,Deletebutton)
+    tbody.append(row)
+      
+   })
+   }
+   function Doctor_role(Experience_in_Years){
+    if (Experience_in_Years > 5) {
+        return 'Senior';
+    } else if (Experience_in_Years >= 2 && Experience_in_Years <= 5) {
+        return 'Junior';
+    } else {
+        return 'Trainee';
+    }
+  }
+  
+  
+  </script>
+</html>
+          
